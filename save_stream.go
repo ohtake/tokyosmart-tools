@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/ohtake/tokyosmart-tools/lib"
 )
 
 func main() {
 	newFileCh := make(chan string, 2*100)
-	endpoint := NewEndpoint("v-low-tokyo1", "2865")
+	endpoint := lib.NewEndpoint("v-low-tokyo1", "2865")
 	go func() {
-		streamWather := NewStreamWatcher(endpoint, newFileCh)
+		streamWather := lib.NewStreamWatcher(endpoint, newFileCh)
 		for {
 			err := streamWather.FetchList()
 			if err != nil {
@@ -20,7 +22,7 @@ func main() {
 		}
 	}()
 	go func() {
-		downloader := NewTSDownloader("output", endpoint, newFileCh)
+		downloader := lib.NewTSDownloader("output", endpoint, newFileCh)
 		downloader.Prepare()
 		for {
 			result := downloader.Next()
