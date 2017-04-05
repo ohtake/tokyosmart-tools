@@ -19,5 +19,5 @@ for ts in $(ls *.ts | sort); do
   echo -e "${ts}\c"
 done
 
-echo -e "' -c copy output.mp4\c"
+echo -e "' -c copy output.m4a\c"
 echo
