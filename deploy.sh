@@ -5,10 +5,7 @@ set -o pipefail
 
 git checkout -B gh-pages
 
-mkdir -p out
-GOOS=linux GOARCH=amd64 go build -o out/save_stream.linux-amd64 save_stream.go
-GOOS=windows GOARCH=amd64 go build -o out/save_stream.windows-amd64.exe save_stream.go
-GOOS=windows GOARCH=386 go build -o out/save_stream.windows-386.exe save_stream.go
+./build.sh
 
 git add out -f
 
