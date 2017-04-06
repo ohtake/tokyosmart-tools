@@ -1,9 +1,9 @@
 package lib
 
 import (
-	"testing"
-	"io"
 	"bytes"
+	"io"
+	"testing"
 )
 
 func testBody(t *testing.T, expected string, body io.Reader) {

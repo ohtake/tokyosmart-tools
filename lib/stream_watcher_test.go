@@ -7,8 +7,8 @@ import (
 func TestStreamWatcher_ShoudListAllFilesAtFirst(t *testing.T) {
 	ch := make(chan string, 10)
 	fetcher := NewDummyFetcherCount([]string{
-		"12_20170402093004.ts\n"+
-		"11_20170402092959.ts\n",
+		"12_20170402093004.ts\n" +
+			"11_20170402092959.ts\n",
 	})
 	w := NewStreamWatcherF(NewEndpoint("v-low-tokyo1", "2865"), ch, fetcher)
 	if err := w.FetchList(); err != nil {
@@ -28,10 +28,10 @@ func TestStreamWatcher_ShoudListAllFilesAtFirst(t *testing.T) {
 func TestStreamWatcher_ShoudListNewFilesWhenSecondFetch(t *testing.T) {
 	ch := make(chan string, 10)
 	fetcher := NewDummyFetcherCount([]string{
-		"12_20170402093004.ts\n"+
-		"11_20170402092959.ts\n",
-		"13_20170402093009.ts\n"+
-		"12_20170402093004.ts\n",
+		"12_20170402093004.ts\n" +
+			"11_20170402092959.ts\n",
+		"13_20170402093009.ts\n" +
+			"12_20170402093004.ts\n",
 	})
 	w := NewStreamWatcherF(NewEndpoint("v-low-tokyo1", "2865"), ch, fetcher)
 	if err := w.FetchList(); err != nil {

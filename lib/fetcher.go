@@ -1,9 +1,9 @@
 package lib
 
 import (
+	"io/ioutil"
 	"net/http"
 	"strings"
-	"io/ioutil"
 )
 
 type Fetcher interface {
@@ -13,7 +13,7 @@ type Fetcher interface {
 type defaultFetcher struct {
 }
 
-func NewDefaultFetcher() Fetcher{
+func NewDefaultFetcher() Fetcher {
 	return defaultFetcher{}
 }
 
@@ -38,6 +38,6 @@ func (f *dummyFetcherCount) Get(url string) (*http.Response, error) {
 	f.index++
 	return &http.Response{
 		StatusCode: 200,
-		Body: reader,
+		Body:       reader,
 	}, nil
 }
