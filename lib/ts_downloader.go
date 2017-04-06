@@ -2,48 +2,49 @@ package lib
 
 import (
 	"io"
-	"net/http"
-	"os"
-	"path"
 )
 
 type TSDownloader struct {
-	outputDir string
 	endpoint  Endpoint
 	newFileCh chan string
+	fetcher   Fetcher
+	writer    TSWriter
 }
 
 func NewTSDownloader(outputDir string, endpoint Endpoint, newFileCh chan string) TSDownloader {
+	return NewTSDownloaderFW(endpoint, newFileCh, NewDefaultFetcher(), NewDefaultTSWriter(outputDir))
+}
+
+func NewTSDownloaderFW(endpoint Endpoint, newFileCh chan string, fetcher Fetcher, writer TSWriter) TSDownloader {
 	return TSDownloader{
-		outputDir: outputDir,
 		endpoint:  endpoint,
 		newFileCh: newFileCh,
+		fetcher:   fetcher,
+		writer:    writer,
 	}
 }
 
 func (d TSDownloader) Prepare() {
-	os.Mkdir(d.outputDir, os.ModeDir)
+	d.writer.Prepare()
 }
 
 func (d TSDownloader) Next() TSDownloaderResult {
 	f := <-d.newFileCh
-	localFilePath := path.Join(d.outputDir, TrimSerial(f))
-	_, err := os.Stat(localFilePath)
-	if err == nil {
+	if d.writer.HasTS(f) {
 		return newTSDownloaderResultSuccess(f, "skipped")
 	}
 	uri := d.endpoint.TS(f)
-	resp, err := http.Get(uri)
+	resp, err := d.fetcher.Get(uri)
 	if err != nil {
 		return newTSDownloaderResultError(f, err)
 	}
 	defer resp.Body.Close()
-	file, err := os.Create(localFilePath)
+	out, err := d.writer.Open(f)
 	if err != nil {
 		return newTSDownloaderResultError(f, err)
 	}
-	defer file.Close()
-	_, err = io.Copy(file, resp.Body)
+	defer out.Close()
+	_, err = io.Copy(out, resp.Body)
 	if err != nil {
 		return newTSDownloaderResultError(f, err)
 	}
