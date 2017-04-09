@@ -23,7 +23,7 @@ func NewDefaultTSWriter(outputDir string) TSWriter {
 }
 
 func (w defaultTSWriter) Prepare() {
-	os.Mkdir(w.outputDir, os.ModeDir)
+	os.Mkdir(w.outputDir, 0755)
 }
 
 func (w defaultTSWriter) HasTS(tsFile string) bool {
