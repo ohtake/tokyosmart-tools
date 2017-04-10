@@ -2,7 +2,10 @@ package lib
 
 import (
 	"fmt"
+	"regexp"
 )
+
+var serial = regexp.MustCompile("^\\d{2}_")
 
 type Endpoint struct {
 	area      string
@@ -25,5 +28,5 @@ func (e Endpoint) TS(name string) string {
 }
 
 func TrimSerial(tsFilename string) string {
-	return tsFilename[3:]
+	return serial.ReplaceAllString(tsFilename, "")
 }

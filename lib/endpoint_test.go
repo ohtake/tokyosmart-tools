@@ -15,7 +15,30 @@ func TestEndpoint(t *testing.T) {
 }
 
 func TestTrimSerial(t *testing.T) {
-	if result := TrimSerial("11_20170402092959.ts"); result != "20170402092959.ts" {
-		t.Errorf("TrimSerial %v", result)
+	cases := []struct {
+		input    string
+		expected string
+	}{
+		{
+			input:    "11_20170402092959.ts",
+			expected: "20170402092959.ts",
+		},
+		{
+			input:    "no_serial.ts",
+			expected: "no_serial.ts",
+		},
+		{
+			input:    "123_long_serial.ts",
+			expected: "123_long_serial.ts",
+		},
+		{
+			input:    "1_short_serial.ts",
+			expected: "1_short_serial.ts",
+		},
+	}
+	for _, c := range cases {
+		if result := TrimSerial(c.input); result != c.expected {
+			t.Errorf("TrimSerial %v %v", result, c.expected)
+		}
 	}
 }
