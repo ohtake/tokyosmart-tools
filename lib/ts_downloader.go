@@ -43,11 +43,18 @@ func (d TSDownloader) Next() TSDownloaderResult {
 	if err != nil {
 		return newTSDownloaderResultError(f, err)
 	}
-	defer out.Close()
+	incompleteDownload := true
+	defer func() {
+		out.Close()
+		if incompleteDownload {
+			d.writer.Remove(f)
+		}
+	}()
 	_, err = io.Copy(out, resp.Body)
 	if err != nil {
 		return newTSDownloaderResultError(f, err)
 	}
+	incompleteDownload = false
 	return newTSDownloaderResultSuccess(f, "downloaded")
 }
 

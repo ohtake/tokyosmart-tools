@@ -10,6 +10,7 @@ type TSWriter interface {
 	Prepare()
 	HasTS(tsFile string) bool
 	Open(tsFile string) (io.WriteCloser, error)
+	Remove(tsFile string) error
 }
 
 type defaultTSWriter struct {
@@ -35,4 +36,9 @@ func (w defaultTSWriter) HasTS(tsFile string) bool {
 func (w defaultTSWriter) Open(tsFile string) (io.WriteCloser, error) {
 	localFilePath := path.Join(w.outputDir, TrimSerial(tsFile))
 	return os.Create(localFilePath)
+}
+
+func (w defaultTSWriter) Remove(tsFile string) error {
+	localFilePath := path.Join(w.outputDir, TrimSerial(tsFile))
+	return os.Remove(localFilePath)
 }
