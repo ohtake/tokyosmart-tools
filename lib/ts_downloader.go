@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"fmt"
 	"io"
 )
 
@@ -37,6 +38,8 @@ func (d TSDownloader) Next() TSDownloaderResult {
 	resp, err := d.fetcher.Get(uri)
 	if err != nil {
 		return newTSDownloaderResultError(f, err)
+	} else if resp.StatusCode != 200 {
+		return newTSDownloaderResultError(f, fmt.Errorf("response status %d", resp.StatusCode))
 	}
 	defer resp.Body.Close()
 	out, err := d.writer.Open(f)

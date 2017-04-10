@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"errors"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -36,7 +35,9 @@ func NewDummyFetcherCount(responses []string) Fetcher {
 
 func (f *dummyFetcherCount) Get(url string) (*http.Response, error) {
 	if len(f.responses) <= f.index {
-		return nil, errors.New("no more fetch")
+		return &http.Response{
+			StatusCode: 404,
+		}, nil
 	}
 	reader := ioutil.NopCloser(strings.NewReader(f.responses[f.index]))
 	f.index++
