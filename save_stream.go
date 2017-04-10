@@ -27,7 +27,7 @@ func main() {
 		for {
 			result := downloader.Next()
 			if result.Success {
-				fmt.Printf("%s %s\n", result.Action, result.TsFile)
+				fmt.Println(result.Action, result.TsFile)
 			} else {
 				fmt.Fprintln(os.Stderr, result.Error)
 				// TODO retry?
