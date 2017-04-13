@@ -39,7 +39,7 @@ func (d TSDownloader) Next() TSDownloaderResult {
 	if err != nil {
 		return newTSDownloaderResultError(f, err)
 	} else if resp.StatusCode != 200 {
-		return newTSDownloaderResultError(f, fmt.Errorf("response status %d", resp.StatusCode))
+		return newTSDownloaderResultError(f, fmt.Errorf("unexpected response %d from %s", resp.StatusCode, uri))
 	}
 	defer resp.Body.Close()
 	out, err := d.writer.Open(f)

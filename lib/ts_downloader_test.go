@@ -94,7 +94,7 @@ func TestTSDownloader_ShoudNotDownloadOrOpenWhenFileExists(t *testing.T) {
 		t.Error(w.numberOfFiles())
 	}
 	ch := make(chan string, 10)
-	d := NewTSDownloaderFW(NewEndpoint("v-low-tokyo1", "2865"), ch, NewDummyFetcherCount([]string{""}), w)
+	d := NewTSDownloaderFW(NewEndpoint("v-low-tokyo1", "2865"), ch, NewDummyFetcherCount([]string{"ts"}), w)
 	ch <- "exists.ts"
 	if result := d.Next(); !result.Success || result.Action != "skipped" {
 		t.Error(result)

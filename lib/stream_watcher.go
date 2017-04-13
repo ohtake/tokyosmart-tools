@@ -2,6 +2,7 @@ package lib
 
 import (
 	"bufio"
+	"fmt"
 )
 
 type StreamWatcher struct {
@@ -24,9 +25,12 @@ func NewStreamWatcherF(endpoint Endpoint, newFileCh chan string, fetcher Fetcher
 }
 
 func (w *StreamWatcher) FetchList() error {
-	resp, err := w.fetcher.Get(w.endpoint.List())
+	uri := w.endpoint.List()
+	resp, err := w.fetcher.Get(uri)
 	if err != nil {
 		return err
+	} else if resp.StatusCode != 200 {
+		return fmt.Errorf("unexpected response %d from %s", resp.StatusCode, uri)
 	}
 	files := make(map[string]bool)
 	defer resp.Body.Close()

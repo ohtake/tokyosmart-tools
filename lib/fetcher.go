@@ -27,6 +27,7 @@ type dummyFetcherCount struct {
 }
 
 // NewDummyFetcherCount creates a fetcher which returns response based on number of calls.
+// If you want to return 404, supply an empty string.
 func NewDummyFetcherCount(responses []string) Fetcher {
 	return &dummyFetcherCount{
 		responses: responses,
@@ -39,8 +40,14 @@ func (f *dummyFetcherCount) Get(url string) (*http.Response, error) {
 			StatusCode: 404,
 		}, nil
 	}
-	reader := ioutil.NopCloser(strings.NewReader(f.responses[f.index]))
+	str := f.responses[f.index]
 	f.index++
+	if str == "" {
+		return &http.Response{
+			StatusCode: 404,
+		}, nil
+	}
+	reader := ioutil.NopCloser(strings.NewReader(str))
 	return &http.Response{
 		StatusCode: 200,
 		Body:       reader,
