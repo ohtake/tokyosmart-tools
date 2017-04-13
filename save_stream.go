@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"time"
@@ -9,8 +10,17 @@ import (
 )
 
 func main() {
+	area := flag.String("area", "v-low-tokyo1", "Area (v-low-tokyo1, v-low-nagoya1, v-low-osaka1, v-low-fukuoka1)")
+	service := flag.String("service", "2865", "Case-sensitive ServiceID (2865 for tokyo, 2C65 for nagoyoa, 3065 for osaka, 3865 for fukuoka)")
+	help := flag.Bool("help", false, "Print help")
+	flag.Parse()
+	if *help {
+		flag.Usage()
+		return
+	}
+
 	newFileCh := make(chan string, 2*100)
-	endpoint := lib.NewEndpoint("v-low-tokyo1", "2865")
+	endpoint := lib.NewEndpoint(*area, *service)
 	go func() {
 		streamWather := lib.NewStreamWatcher(endpoint, newFileCh)
 		for {
