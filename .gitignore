@@ -1,6 +1,6 @@
 /coverage.txt
 
-/out
+/dist
 temp-*.sh
 *.ts
 *.mp4
