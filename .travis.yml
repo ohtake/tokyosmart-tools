@@ -1,6 +1,6 @@
 language: go
 go:
-  - "1.12.9"
+  - "1.13"
 script:
   - ./cover.sh
 after_success:
